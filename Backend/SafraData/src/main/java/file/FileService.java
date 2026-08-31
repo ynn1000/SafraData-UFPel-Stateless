@@ -1,36 +1,32 @@
 package file;
 
-
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.io.InputStream;
 
+@Service
 public class FileService {
-    public void fileHandler() throws FileNotFoundException {
-        String path = "src/main/resources/PlanilhaAgro.xlsx";
+    public void validateFile(MultipartFile file){
+        if(file.isEmpty()){
+            throw new IllegalArgumentException("Arquivo inválido.");
+        }
 
-        try (InputStream input = new FileInputStream(path);
-             Workbook workbook = new XSSFWorkbook(input);) {
-            System.out.println("arquivo carregado");
+        String fileName = file.getOriginalFilename();
+        boolean isFilenameValid = fileName != null && (fileName.toLowerCase().endsWith(".xls") || fileName.toLowerCase().endsWith(".xlsx"));
 
-            DataFormatter formatter = new DataFormatter();
-            Sheet sheet = workbook.getSheetAt(0);
-
-            for (Row row : sheet) {
-                for (Cell cell : row) {
-                    System.out.print(formatter.formatCellValue(cell) + " | ");
-                }
-                System.out.println();
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        if(!isFilenameValid){
+            throw new IllegalArgumentException("Apenas arquivos com extensão .xls ou .xlsx são aceitos.");
         }
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        new FileService().fileHandler();
+    public Workbook openFile(MultipartFile file){
+        validateFile(file);
+        try(InputStream input = file.getInputStream()){
+            return WorkbookFactory.create(input);
+        } catch(IOException e){
+            throw new RuntimeException("Erro ao abrir o arquivo: " + e.getMessage(), e);
+        }
     }
 }
