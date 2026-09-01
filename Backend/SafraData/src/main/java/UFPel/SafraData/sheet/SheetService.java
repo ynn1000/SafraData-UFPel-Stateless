@@ -1,10 +1,12 @@
-package sheet;
+package UFPel.SafraData.sheet;
 
 import org.apache.poi.ss.usermodel.*;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class SheetService {
     public SheetData readSheet(Workbook wb){
         Sheet sheet = wb.getSheetAt(0);
