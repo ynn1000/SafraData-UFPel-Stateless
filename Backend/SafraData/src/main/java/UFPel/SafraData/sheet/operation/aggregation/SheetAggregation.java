@@ -1,4 +1,4 @@
-package UFPel.SafraData.sheet.operation;
+package UFPel.SafraData.sheet.operation.aggregation;
 
 import UFPel.SafraData.sheet.SheetData;
 
