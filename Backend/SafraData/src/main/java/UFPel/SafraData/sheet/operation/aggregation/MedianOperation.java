@@ -2,9 +2,11 @@ package UFPel.SafraData.sheet.operation.aggregation;
 
 import UFPel.SafraData.sheet.SheetData;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class MedianOperation implements SheetAggregation{
     @Override
     public String name() {

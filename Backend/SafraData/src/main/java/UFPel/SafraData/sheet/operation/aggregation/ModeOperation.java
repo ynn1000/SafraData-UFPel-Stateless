@@ -1,9 +1,14 @@
 package UFPel.SafraData.sheet.operation.aggregation;
 
 import UFPel.SafraData.sheet.SheetData;
+import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+@Component
 public class ModeOperation implements SheetAggregation{
     @Override
     public String name() {
@@ -20,12 +25,29 @@ public class ModeOperation implements SheetAggregation{
                 map(row -> row.get(index)).
                 map(this::requireNumeric).
                 toList();
-        return null;
+
+        Map<Double, Long> frequencies = values.stream()
+                .collect(Collectors.groupingBy(v -> v, Collectors.counting()));
+
+        long maxFrequency = frequencies.values().stream()
+                .mapToLong(Long::longValue)
+                .max()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Não há valores para calcular a moda da coluna. Coluna fornecida: " + columnName));
+
+        List<Double> modes = frequencies.entrySet().stream()
+                .filter(entry -> entry.getValue() == maxFrequency)
+                .map(Map.Entry::getKey)
+                .sorted()
+                .toList();
+
+
+        return modes.size() == 1 ? modes.get(0) : modes;
     }
 
     private Double requireNumeric(Object value) {
         if(value instanceof Double d) return d;
-        throw new IllegalArgumentException("A operação média só pode ser realizada usando valores" +
+        throw new IllegalArgumentException("A operação moda só pode ser realizada usando valores" +
                 "numéricos. Valores utilizados: " + value);
     }
 }
