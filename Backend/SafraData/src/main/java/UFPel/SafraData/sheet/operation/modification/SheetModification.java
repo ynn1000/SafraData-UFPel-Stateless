@@ -4,5 +4,5 @@ import UFPel.SafraData.sheet.SheetData;
 
 public interface SheetModification {
     String name();
-    SheetData apply(SheetData sheetData);
+    SheetData apply(SheetData sheetData, ModificationParams modificationParams);
 }
