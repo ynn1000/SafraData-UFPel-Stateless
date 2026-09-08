@@ -21,5 +21,5 @@ public class AggregationRunner {
             throw new IllegalArgumentException("Operação não encontrada: " + opName);
         }
         return op.calculate(sheetData, columnName);
-    };
+    }
 }
