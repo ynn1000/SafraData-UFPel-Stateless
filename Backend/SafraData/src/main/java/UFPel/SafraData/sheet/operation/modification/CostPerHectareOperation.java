@@ -38,7 +38,7 @@ public class CostPerHectareOperation implements SheetModification {
                 .toArray();
 
         List<Object> values = new ArrayList<>();
-        for(int i = 0; i <= numerator.length; i++) {
+        for(int i = 0; i < numerator.length; i++) {
             values.add(numerator[i] / denominator[i]);
         }
 

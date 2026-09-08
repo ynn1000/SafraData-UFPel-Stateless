@@ -47,11 +47,25 @@ public class SheetService {
         if(cell == null) return null;
 
         return switch(cell.getCellType()){
-            case STRING -> cell.getStringCellValue();
+            case STRING -> parseStringCell(cell.getStringCellValue());
             case NUMERIC -> DateUtil.isCellDateFormatted(cell) ?  cell.getDateCellValue() : cell.getNumericCellValue();
             case BOOLEAN -> cell.getBooleanCellValue();
             case FORMULA -> cell.getNumericCellValue();
             default -> null;
         };
+    }
+
+    private Object parseStringCell(String text) {
+        if (text == null || text.isBlank()) {
+            return text;
+        }
+
+        String normalized = text.trim().replace(",", ".");
+
+        try {
+            return Double.parseDouble(normalized);
+        } catch (NumberFormatException e) {
+            return text;
+        }
     }
 }
